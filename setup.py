@@ -51,7 +51,7 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: System :: Systems Administration',
         'Topic :: System :: Installation/Setup',
-        'Topic :: Utilities'
+        'Topic :: Utilities',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         # Specify the Python versions you support here. In particular,
         # ensure that you indicate whether you support Python 2,
