@@ -1,0 +1,117 @@
+"""Package Manager
+==================
+A generic package manager adaptable to another OS just by changing the
+``__init__`` call. Also a tribute to famed ArchLinux package manager.
+
+"""
+import subprocess
+import os
+import shutil
+from configparser import ConfigParser
+from .system import Debian
+
+
+def bsl_to_unicode(bsl):
+    """Join a list of bytestrings."""
+    return b' '.join(bsl).decode('utf-8')
+
+
+class PackageManager(object):
+
+    def __init__(self, OS=None):
+        self.oper = OS()
+
+        self.ok_ans = ['y', 'yes', 'a', 'all']
+        self.acceptable_ans = ['y', 'yes', 'n', 'no', 'a', 'all']
+
+        os.makedirs(os.path.expanduser('~/.config'), exist_ok=True)
+        self.config_file = os.path.expanduser('~/.config/apt-local.conf')
+
+    def ask(self, question, ans=''):
+        while ans not in self.acceptable_ans:
+            ans = input('{} {} '.format(question, '(y/n/a):')).lower()
+
+        return ans
+
+    def install(self, args):
+        oper = self.oper
+
+        for pkg in args.pkg:
+            installed = oper.list_installed()
+            deps = oper.depends(pkg)
+            print('Dependencies:', bsl_to_unicode(deps))
+
+            to_download = [pkg.encode('utf-8')]
+            to_download.extend([d for d in deps if d not in installed])
+            print('Packages to be installed:', bsl_to_unicode(to_download))
+
+            ans = ''
+            for dep in to_download:
+                ans = self.ask('{} {}'.format(
+                    'Install', dep.decode('utf-8')), ans)
+
+                if ans in self.ok_ans:
+                    oper.download_and_extract(dep)
+                    try:
+                        oper.stow(pkg)
+                    except subprocess.CalledProcessError:
+                        pass
+
+                if ans != 'a' or ans != 'all':
+                    ans = ''
+
+    def uninstall(self, args):
+        pkg = args.pkg
+        oper = self.oper
+
+        config = self.read_config()
+        path = config.get('default', 'path')
+        os.chdir(path)
+        dirs = os.listdir()
+
+        ans = ''
+        for pkg in args.pkg:
+            if pkg not in dirs:
+                raise FileNotFoundError('Cannot find the package ' + pkg)
+
+            ans = self.ask('{} {}'.format('Uninstall', pkg), ans)
+
+            if ans in self.ok_ans:
+                oper.unstow(pkg)
+                shutil.rmtree(pkg)
+
+            if ans != 'a' or ans != 'all':
+                ans = ''
+
+    def read_config(self):
+        config = ConfigParser()
+        if not os.path.exists(self.config_file):
+            raise FileNotFoundError(
+                'Cannot find configuration file ' + self.config_file +
+                '. Have you tried "apt-local set-path"?')
+
+        config.read(self.config_file)
+        return config
+
+    def list(self, args):
+        config = self.read_config()
+        path = config.get('default', 'path')
+
+        for item in os.listdir(path):
+            if os.path.isdir(os.path.join(path, item)):
+                print(item)
+
+    def show_path(self, args):
+        config = self.read_config()
+        print('path =', config.get('default', 'path'))
+
+    def set_path(self, args):
+        path = args.path
+
+        config = ConfigParser()
+        if os.path.exists(self.config_file):
+            config.read(self.config_file)
+
+        config['default'] = {'path': path}
+        with open(self.config_file, 'w') as configfile:
+            config.write(configfile)
