@@ -22,6 +22,18 @@ If Stow is not available in the system you may use `this
 script <https://gist.github.com/ashwinvis/a533c210d1ba788479a3724558e4d873>`__
 to install it.
 
+.. warning::
+
+   This is an experimental project, and often results in hit-or-miss situation.
+   The advantages with apt-local is a lightweight installation and installing
+   packages requires no compilation. If you want a more robust package manager
+   use one of the following:
+
+    - NixOS/nix
+    - conda/conda
+    - fsquillace/junest
+    - bpkg/bpkg
+
 Quick start
 -----------
 
