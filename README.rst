@@ -29,10 +29,10 @@ to install it.
    packages requires no compilation. If you want a more robust package manager
    use one of the following:
 
-    - NixOS/nix
-    - conda/conda
-    - fsquillace/junest
-    - bpkg/bpkg
+   - NixOS/nix
+   - conda/conda
+   - fsquillace/junest
+   - bpkg/bpkg
 
 Quick start
 -----------
