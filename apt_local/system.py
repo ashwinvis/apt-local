@@ -20,7 +20,7 @@ def run(cmds):
         stdin = proc.stdout
 
     cmd = shlex.split(cmds[-1])
-    return subprocess.check_output(cmd, stdin=stdin)
+    return subprocess.check_output(cmd, stdin=stdin).decode("utf-8", "strict")
 
 
 class System(object):
@@ -37,8 +37,8 @@ class Debian(System):
 
     def depends(self, pkg):
         deps = run("apt-cache depends " + pkg + "| grep -e ' *Depends'").split()
-        deps = [line.split(b':')[-1] for line in deps]
-        deps = list(filter(b''.__ne__, deps))
+        deps = [line.split(':')[-1] for line in deps]
+        deps = list(filter(''.__ne__, deps))
         return deps
 
     def download_and_extract(self, pkg):
@@ -46,13 +46,13 @@ class Debian(System):
         cwd = os.getcwd()
         os.makedirs(dest, exist_ok=True)
         os.chdir(dest)
-        run('apt-get download ' + pkg)
+        run('apt-get download {}'.format(pkg))
         deb = glob(pkg + '*.deb')[0]
         run('dpkg -X ' + deb + ' ' + pkg)
         os.chdir(cwd)
         os.makedirs(os.path.join(cwd, pkg, 'bin'), exist_ok=True)
         try:
-            shutil.move(os.path.join(dest, pkg, 'usr'), os.path.join(cwd, pkg))
+            shutil.move(os.path.join(dest, pkg, 'usr'), os.sep.join([cwd, pkg]))
         except FileNotFoundError:
             print('No directory like {}/{}/{}'.format(dest, pkg, 'usr'))
 

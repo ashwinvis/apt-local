@@ -11,11 +11,6 @@ from configparser import ConfigParser
 from .system import Debian
 
 
-def bsl_to_unicode(bsl):
-    """Join a list of bytestrings."""
-    return b' '.join(bsl).decode('utf-8')
-
-
 class PackageManager(object):
 
     def __init__(self, OS=None):
@@ -39,16 +34,16 @@ class PackageManager(object):
         for pkg in args.pkg:
             installed = oper.list_installed()
             deps = oper.depends(pkg)
-            print('Dependencies:', bsl_to_unicode(deps))
+            print('Dependencies:', *deps)
 
-            to_download = [pkg.encode('utf-8')]
+            to_download = [pkg]  # [pkg.encode('utf-8')]
             to_download.extend([d for d in deps if d not in installed])
-            print('Packages to be installed:', bsl_to_unicode(to_download))
+            print('Packages to be installed:', *to_download)
 
             ans = ''
             for dep in to_download:
                 ans = self.ask('{} {}'.format(
-                    'Install', dep.decode('utf-8')), ans)
+                    'Install', dep, ans))
 
                 if ans in self.ok_ans:
                     oper.download_and_extract(dep)
