@@ -33,6 +33,10 @@ def init_parser():
     parser_list = subparsers.add_parser('list')
     parser_list.set_defaults(func=pacman.list)
 
+    parser_set_path = subparsers.add_parser('search')
+    parser_set_path.add_argument('pkg', nargs='+')
+    parser_set_path.set_defaults(func=pacman.search)
+
     parser_set_path = subparsers.add_parser('set-path')
     parser_set_path.add_argument('path')
     parser_set_path.set_defaults(func=pacman.set_path)

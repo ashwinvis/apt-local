@@ -50,6 +50,10 @@ class Debian(System):
         deps = set(filter(''.__ne__, deps))
         return deps
 
+    def search(self, pkg):
+        pkgs = run("apt-cache search {0} | grep {0}".format(pkg))
+        print(pkgs)
+
     def download_and_extract(self, pkg):
         dest = Path(gettempdir()) / 'apt-local'
         cwd = Path.cwd()

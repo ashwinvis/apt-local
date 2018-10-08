@@ -83,6 +83,10 @@ class PackageManager(object):
             if ans != 'a' or ans != 'all':
                 ans = ''
 
+    def search(self, args):
+        for pkg in args.pkg:
+            self.oper.search(pkg)
+
     def read_config(self):
         config = ConfigParser()
         if not os.path.exists(self.config_file):
