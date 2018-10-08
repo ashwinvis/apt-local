@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 def run(cmds):
-    cmds = cmds.split('|')
+    cmds = cmds.split("|")
     stdin = None
     for cmd in cmds[:-1]:
         cmd = shlex.split(cmd)
@@ -36,25 +36,25 @@ def mv(path_from, path_to):
         else:
             raise
     except FileNotFoundError:
-        print('No directory like {}'.format(path_from))
+        print("No directory like {}".format(path_from))
 
 
 class System(object):
     def stow(self, pkg):
-        return run('stow -v ' + pkg)
+        return run("stow -v " + pkg)
 
     def unstow(self, pkg):
-        return run('stow -D -v ' + pkg)
+        return run("stow -D -v " + pkg)
 
 
 class Debian(System):
     def list_installed(self):
-        return run('dpkg -l | grep ii')
+        return run("dpkg -l | grep ii")
 
     def depends(self, pkg):
         deps = run("apt-cache depends " + pkg + "| grep -e ' *Depends'").split()
-        deps = [line.split(':')[-1] for line in deps]
-        deps = set(filter(''.__ne__, deps))
+        deps = [line.split(":")[-1] for line in deps]
+        deps = set(filter("".__ne__, deps))
         return deps
 
     def search(self, pkg):
@@ -62,17 +62,17 @@ class Debian(System):
         print(pkgs)
 
     def download_and_extract(self, pkg):
-        dest = Path(gettempdir()) / 'apt-local'
+        dest = Path(gettempdir()) / "apt-local"
         cwd = Path.cwd()
         os.makedirs(str(dest), exist_ok=True)
         os.chdir(str(dest))
 
-        run('apt-get download {}'.format(pkg))
-        deb = glob(pkg + '*.deb')[0]
-        run('dpkg -X ' + deb + ' ' + pkg)
+        run("apt-get download {}".format(pkg))
+        deb = glob(pkg + "*.deb")[0]
+        run("dpkg -X " + deb + " " + pkg)
 
         os.chdir(str(cwd))
-        for path_from in (dest / pkg / 'usr').glob('*'):
+        for path_from in (dest / pkg / "usr").glob("*"):
             mv(path_from, cwd / pkg)
 
-        mv(dest / pkg / 'bin', cwd / pkg)
+        mv(dest / pkg / "bin", cwd / pkg)

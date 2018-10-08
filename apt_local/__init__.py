@@ -22,26 +22,26 @@ def init_parser():
     subparsers = parser.add_subparsers()
 
     # create the parser for the "install" command, etc.
-    parser_install = subparsers.add_parser('install')
-    parser_install.add_argument('pkg', nargs='+')
+    parser_install = subparsers.add_parser("install")
+    parser_install.add_argument("pkg", nargs="+")
     parser_install.set_defaults(func=pacman.install)
 
-    parser_uninstall = subparsers.add_parser('uninstall')
-    parser_uninstall.add_argument('pkg', nargs='+')
+    parser_uninstall = subparsers.add_parser("uninstall")
+    parser_uninstall.add_argument("pkg", nargs="+")
     parser_uninstall.set_defaults(func=pacman.uninstall)
 
-    parser_list = subparsers.add_parser('list')
+    parser_list = subparsers.add_parser("list")
     parser_list.set_defaults(func=pacman.list)
 
-    parser_set_path = subparsers.add_parser('search')
-    parser_set_path.add_argument('pkg', nargs='+')
+    parser_set_path = subparsers.add_parser("search")
+    parser_set_path.add_argument("pkg", nargs="+")
     parser_set_path.set_defaults(func=pacman.search)
 
-    parser_set_path = subparsers.add_parser('set-path')
-    parser_set_path.add_argument('path')
+    parser_set_path = subparsers.add_parser("set-path")
+    parser_set_path.add_argument("path")
     parser_set_path.set_defaults(func=pacman.set_path)
 
-    parser_show_path = subparsers.add_parser('show-path')
+    parser_show_path = subparsers.add_parser("show-path")
     parser_show_path.set_defaults(func=pacman.show_path)
 
     return parser
@@ -57,5 +57,5 @@ def main():
         os.chdir(curdir)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
