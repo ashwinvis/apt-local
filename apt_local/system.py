@@ -28,6 +28,13 @@ def run(cmds):
 def mv(path_from, path_to):
     try:
         shutil.move(str(path_from), str(path_to))
+    except shutil.Error:
+        # Try to move directory contents
+        if path_to.exists():
+            for path_from_child in path_from.glob("*"):
+                mv(path_from_child, path_to)
+        else:
+            raise
     except FileNotFoundError:
         print('No directory like {}'.format(path_from))
 

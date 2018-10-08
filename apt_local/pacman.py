@@ -32,6 +32,8 @@ class PackageManager(object):
 
     def install(self, args):
         oper = self.oper
+        config = self.read_config()
+        os.chdir(config.get('default', 'path'))
 
         for pkg in args.pkg:
             installed = oper.list_installed()
@@ -55,6 +57,7 @@ class PackageManager(object):
                     try:
                         oper.stow(pkg)
                     except subprocess.CalledProcessError:
+                        print("Error while stowing")
                         pass
 
                 if ans != 'a' or ans != 'all':
