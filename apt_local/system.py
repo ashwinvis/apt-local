@@ -9,6 +9,8 @@ import shlex
 import os
 import shutil
 from glob import glob
+from tempfile import gettempdir
+from pathlib import Path
 
 
 def run(cmds):
@@ -21,6 +23,13 @@ def run(cmds):
 
     cmd = shlex.split(cmds[-1])
     return subprocess.check_output(cmd, stdin=stdin).decode("utf-8", "strict")
+
+
+def mv(path_from, path_to):
+    try:
+        shutil.move(str(path_from), str(path_to))
+    except FileNotFoundError:
+        print('No directory like {}'.format(path_from))
 
 
 class System(object):
@@ -42,21 +51,17 @@ class Debian(System):
         return deps
 
     def download_and_extract(self, pkg):
-        dest = '/tmp/apt-local'
-        cwd = os.getcwd()
-        os.makedirs(dest, exist_ok=True)
-        os.chdir(dest)
+        dest = Path(gettempdir()) / 'apt-local'
+        cwd = Path.cwd()
+        os.makedirs(str(dest), exist_ok=True)
+        os.chdir(str(dest))
+
         run('apt-get download {}'.format(pkg))
         deb = glob(pkg + '*.deb')[0]
         run('dpkg -X ' + deb + ' ' + pkg)
-        os.chdir(cwd)
-        os.makedirs(os.path.join(cwd, pkg, 'bin'), exist_ok=True)
-        try:
-            shutil.move(os.path.join(dest, pkg, 'usr'), os.sep.join([cwd, pkg]))
-        except FileNotFoundError:
-            print('No directory like {}/{}/{}'.format(dest, pkg, 'usr'))
 
-        try:
-            shutil.move(os.path.join(dest, pkg, 'bin'), os.path.join(cwd, pkg, 'bin'))
-        except FileNotFoundError:
-            print('No directory like {}/{}/{}'.format(dest, pkg, 'bin'))
+        os.chdir(str(cwd))
+        for path_from in (dest / pkg / 'usr').glob('*'):
+            mv(path_from, cwd / pkg)
+
+        mv(dest / pkg / 'bin', cwd / pkg)
