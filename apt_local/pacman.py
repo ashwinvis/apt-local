@@ -8,7 +8,9 @@ import subprocess
 import os
 import shutil
 from configparser import ConfigParser
+import sys
 from .system import Debian
+
 
 
 class PackageManager(object):
@@ -17,14 +19,14 @@ class PackageManager(object):
         self.oper = OS()
 
         self.ok_ans = ['y', 'yes', 'a', 'all']
-        self.acceptable_ans = ['y', 'yes', 'n', 'no', 'a', 'all']
+        self.acceptable_ans = ['y', 'yes', 'n', 'no', 'a', 'all', 'q', 'quit']
 
         os.makedirs(os.path.expanduser('~/.config'), exist_ok=True)
         self.config_file = os.path.expanduser('~/.config/apt-local.conf')
 
     def ask(self, question, ans=''):
         while ans not in self.acceptable_ans:
-            ans = input('{} {} '.format(question, '(y/n/a):')).lower()
+            ans = input('{} {} '.format(question, '([y]es/[n]o/yes to [a]ll/[q]uit):')).lower()
 
         return ans
 
@@ -44,6 +46,9 @@ class PackageManager(object):
             for dep in to_download:
                 ans = self.ask('{} {}'.format(
                     'Install', dep, ans))
+
+                if ans in ('q', 'quit'):
+                    sys.exit(0)
 
                 if ans in self.ok_ans:
                     oper.download_and_extract(dep)

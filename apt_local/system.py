@@ -47,7 +47,7 @@ class Debian(System):
     def depends(self, pkg):
         deps = run("apt-cache depends " + pkg + "| grep -e ' *Depends'").split()
         deps = [line.split(':')[-1] for line in deps]
-        deps = list(filter(''.__ne__, deps))
+        deps = set(filter(''.__ne__, deps))
         return deps
 
     def download_and_extract(self, pkg):
