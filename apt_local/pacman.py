@@ -7,6 +7,7 @@ A generic package manager adaptable to another OS just by changing the
 import subprocess
 import os
 import shutil
+from collections import OrderedDict
 from configparser import ConfigParser
 import sys
 from .system import Debian
@@ -17,6 +18,10 @@ class PackageManager(object):
 
     def __init__(self, OS=None):
         self.oper = OS()
+        self.envs = OrderedDict(zip(
+            ("PATH", "LD_LIBRARY_PATH", "LIBRARY_PATH", "CPATH", "XDG_DATA_DIRS", "XDG_DATA_HOME"),
+            ("bin", "lib", "lib", "include", "share", "share"))
+        )
 
         self.ok_ans = ['y', 'yes', 'a', 'all']
         self.acceptable_ans = ['y', 'yes', 'n', 'no', 'a', 'all', 'q', 'quit']
@@ -112,6 +117,10 @@ class PackageManager(object):
         config = self.read_config()
         print('path =', config.get('default', 'path'))
 
+        print('environment variables:')
+        for env in self.envs:
+            print("{}={}".format(env, os.getenv(env)))
+
     def set_path(self, args):
         path = args.path
 
@@ -122,3 +131,9 @@ class PackageManager(object):
         config['default'] = {'path': path}
         with open(self.config_file, 'w') as configfile:
             config.write(configfile)
+
+        print("apt-local path is set as", path,
+              "\nEnsure that you have the environment variables configured (for eg. in ~/.bashrc):\n")
+
+        for env, subdir in self.envs.items():
+            print("export {0}=${0}:{1}{2}{3}".format(env, path, os.sep, subdir))
