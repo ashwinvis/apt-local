@@ -1,24 +1,16 @@
 apt-local
 =========
 
-
 [![image](https://img.shields.io/pypi/v/apt_local.svg)](https://pypi.python.org/pypi/apt_local)
-
 [![image](https://img.shields.io/travis/ashwinvis/apt_local.svg)](https://travis-ci.org/ashwinvis/apt_local)
-
 [![Documentation
 Status](https://readthedocs.org/projects/apt-local/badge/?version=latest)](https://apt-local.readthedocs.io/en/latest/?badge=latest)
 
-
-
 Simple symlink-based package manager for local installations (without sudo)
-
-
 
 * Free software: GNU General Public License v3
 
 * Documentation: https://apt-local.readthedocs.io.
-
 
 # Features
 
