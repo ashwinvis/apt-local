@@ -2,7 +2,7 @@ apt-local
 =========
 
 [![image](https://img.shields.io/pypi/v/apt_local.svg)](https://pypi.python.org/pypi/apt_local)
-[![image](https://img.shields.io/travis/ashwinvis/apt_local.svg)](https://travis-ci.org/ashwinvis/apt_local)
+[![image](https://img.shields.io/travis/ashwinvis/apt-local.svg)](https://travis-ci.org/ashwinvis/apt-local)
 [![Documentation
 Status](https://readthedocs.org/projects/apt-local/badge/?version=latest)](https://apt-local.readthedocs.io/en/latest/?badge=latest)
 
@@ -35,11 +35,8 @@ script](https://gist.github.com/ashwinvis/a533c210d1ba788479a3724558e4d873)
 to install it.
 
 <div class="warning">
-
 <div class="admonition-title">
-
 Warning
-
 </div>
 
 This is an experimental project, and often results in hit-or-miss
