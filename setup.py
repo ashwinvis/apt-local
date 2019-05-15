@@ -8,6 +8,7 @@ from setuptools import setup
 
 setup_kwargs = dict(
     test_suite='tests',
+    long_description_content_type="text/markdown",
 )
 
 try:
