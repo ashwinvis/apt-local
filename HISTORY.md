@@ -8,7 +8,7 @@
   - Flattten usr dir
   - Avoid duplicate dependencies
   - Add search subcommand
-  * Refactor to use src/ layout using cookiecutter
+  - Refactor to use src/ layout using cookiecutter
 
 0.0.1b0 (2018-01-19)
 --------------------
