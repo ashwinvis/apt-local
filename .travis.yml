@@ -5,6 +5,7 @@ python:
 - 3.4
 install: pip install -U tox-travis
 script: tox
+before_deploy: make clean
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
