@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Top-level package for apt-local."""
+
+__author__ = """Ashwin Vishnu Mohanan"""
+__email__ = 'ashwinvis@protonmail.com'
+__version__ = '0.0.2b0'
+
 import subprocess
 import argparse
 import os
