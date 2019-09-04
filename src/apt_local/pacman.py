@@ -36,7 +36,10 @@ class PackageManager(object):
         os.makedirs(os.path.expanduser("~/.config"), exist_ok=True)
         self.config_file = os.path.expanduser("~/.config/apt-local.conf")
 
-    def ask(self, question, ans=""):
+    def ask(self, question, ans="", yes=False):
+        if yes:
+            return "yes"
+
         while ans not in self.acceptable_ans:
             ans = input(
                 "{} {} ".format(question, "([y]es/[n]o/yes to [a]ll/[q]uit):")
@@ -60,7 +63,7 @@ class PackageManager(object):
 
             ans = ""
             for dep in to_download:
-                ans = self.ask("{} {}".format("Install", dep, ans))
+                ans = self.ask("{} {}".format("Install", dep), ans, args.yes)
 
                 if ans in ("q", "quit"):
                     sys.exit(0)
@@ -90,7 +93,7 @@ class PackageManager(object):
             if pkg not in dirs:
                 raise FileNotFoundError("Cannot find the package " + pkg)
 
-            ans = self.ask("{} {}".format("Uninstall", pkg), ans)
+            ans = self.ask("{} {}".format("Uninstall", pkg), ans, args.yes)
 
             if ans in self.ok_ans:
                 oper.unstow(pkg)

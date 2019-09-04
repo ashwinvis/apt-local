@@ -30,10 +30,12 @@ def init_parser():
 
     # create the parser for the "install" command, etc.
     parser_install = subparsers.add_parser("install")
+    parser_install.add_argument("-y", "--yes", action="store_true", help="Execute command without confirmation")
     parser_install.add_argument("pkg", nargs="+")
     parser_install.set_defaults(func=pacman.install)
 
     parser_uninstall = subparsers.add_parser("uninstall")
+    parser_uninstall.add_argument("-y", "--yes", action="store_true", help="Execute command without confirmation")
     parser_uninstall.add_argument("pkg", nargs="+")
     parser_uninstall.set_defaults(func=pacman.uninstall)
 
