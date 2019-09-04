@@ -4,7 +4,7 @@
 
 __author__ = """Ashwin Vishnu Mohanan"""
 __email__ = 'ashwinvis@protonmail.com'
-__version__ = '0.0.2b0'
+__version__ = '0.0.2b1'
 
 import subprocess
 import argparse
